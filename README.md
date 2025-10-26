@@ -13,20 +13,20 @@ O **ExploradorDeJogos** tem como principal objetivo ser uma espécie de catálog
 ## Funções Principais
 
 * **Listagem de Jogos Populares:** Tela inicial com os jogos que estão em alta no momento.
-* [cite_start]**Busca e Filtros:** Pesquise jogos pelos seus nomes e filtre seus resultados por plataforma (PC, Playstation, Xbox, etc.)[cite: 21].
+* **Busca e Filtros:** Pesquise jogos pelos seus nomes e filtre seus resultados por plataforma (PC, Playstation, Xbox, etc.).
 * **Tela de Detalhes:** Veja informações detalhadas sobre os jogos, como sua sinopse, prints, data de lançamento e avaliação.
-* [cite_start]**Carregamento dinâmico:** Feedbacks visuais de `loading`, `error` e `success` em todas requisições à API[cite: 20].
-* [cite_start]**Design Responsivo** Interface adaptável para diferentes tamanhos de tela[cite: 9].
+* **Carregamento dinâmico:** Feedbacks visuais de `loading`, `error` e `success` em todas requisições à API.
+* **Design Responsivo** Interface adaptável para diferentes tamanhos de tela.
 
 ---
 
 ## Tecnologias usadas
 
-* [cite_start]**Frontend:** React Native [cite: 50]
+* **Frontend:** React Native
 * **Framework:** Expo
 * **Navegação:** Expo Router
-* **Requisições HTTP** Axios (ou Fetch)
-* [cite_start]**Versões e updates:** Git e Github [cite: 52]
+* **Requisições HTTP** Axios
+* **Versões e updates:** Git e Github
 
 ---
 
@@ -64,7 +64,8 @@ O **ExploradorDeJogos** tem como principal objetivo ser uma espécie de catálog
 
 ## API Utilizada
 
-[cite_start]Este projeto consome a [**RAWG Video Games Database API**](https://rawg.io/apidocs). Ela fornece todos os dados necessários para a listagem, busca e detalhamento dos jogos no aplicativo.
+Este projeto consome a [**RAWG Video Games Database API**](https://rawg.io/apidocs). 
+Ela fornece todos os dados necessários para a listagem, busca e detalhamento dos jogos no aplicativo.
 
 --- 
 
