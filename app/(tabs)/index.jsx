@@ -1,24 +1,77 @@
-import { StyleSheet, View, Text, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import GameCard from "../../components/GameCard";
-
-const mockGames = [
-    { id: '1', name: 'Elden Ring', coverImage: 'https://media.rawg.io/media/games/b29/b294fdd866dcdb643e7bab370a552855.jpg', rating: '9.5' },
-    { id: '2', name: 'Baldur\'s Gate 3', coverImage: 'https://media.rawg.io/media/games/699/69907ecf13f172e9e144069769c3be73.jpg', rating: '9.8' },
-    { id: '3', name: 'Cyberpunk 2077', coverImage: 'https://media.rawg.io/media/games/26d/26d4437715bee60138dab4a7c8c59c92.jpg', rating: '8.9' },
-];
+import { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import GameCard from '../../components/GameCard'; //
+import { getPopularGames } from '../../services/api'; //
 
 export default function TelaInicial (){
+  const [games, setGames] = useState([]); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    console.log("TelaInicial: useEffect iniciado"); 
+    const fetchGames = async () => {
+      setLoading(true); 
+      setError(null);
+      console.log("TelaInicial: Buscando jogos..."); 
+      try {
+        const response = await getPopularGames();
+        console.log("TelaInicial: Resposta da API recebida:", response.status);
+
+        if (response && response.data && Array.isArray(response.data.results)) {
+          console.log(`TelaInicial: ${response.data.results.length} jogos recebidos.`);
+          setGames(response.data.results); 
+        } else {
+          console.error("TelaInicial: Estrutura da resposta da API inválida:", response.data);
+          setError('Formato de dados inesperado recebido.');
+          setGames([]);
+        }
+        
+      } catch (err) {
+        console.error("TelaInicial: ERRO DETALHADO ao buscar jogos:", err.response?.data || err.message || err);
+        setError('Falha ao buscar os jogos. Verifique sua conexão ou a chave da API.');
+        setGames([]);
+      } finally {
+        console.log("TelaInicial: Finalizando busca (loading: false)");
+        setLoading(false); 
+      }
+    };
+
+    fetchGames();
+  }, []);
+
+  console.log("TelaInicial: Renderizando - Loading:", loading, "Error:", error, "Games count:", games.length);
+
+  if (loading) {
+    console.log("TelaInicial: Renderizando ActivityIndicator");
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.header}>Jogos Populares</Text>
-            <FlatList
-            data={mockGames}
-            renderItem={({ item }) => <GameCard game={item} />}
-            keyExtractor={item => item.id}
-            />
-        </SafeAreaView>
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
     );
+  }
+
+  if (error) {
+    console.log("TelaInicial: Renderizando mensagem de erro");
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
+
+  console.log("TelaInicial: Renderizando FlatList com", games.length, "jogos.");
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Jogos Populares</Text>
+      <FlatList
+        data={games}
+        renderItem={({ item }) => <GameCard game={item} />}
+        keyExtractor={item => item.id.toString()}
+      />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -32,4 +85,16 @@ const styles = StyleSheet.create({
         color: '#fff',
         margin: 16,
     },
+    centered: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#121212',
+    },
+    errorText: {
+      color: 'red',
+      fontSize: 16,
+      textAlign: 'center',
+      margin: 20,
+    }
 });

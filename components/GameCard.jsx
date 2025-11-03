@@ -2,11 +2,15 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
 
 export default function GameCard({ game }) {
+    if (!game) {
+        return null; 
+    }
+
     return (
         <Link href={`/game/${game.id}`} asChild>
             <TouchableOpacity>
                 <View style={styles.card}>
-                    <Image source={{ uri: game.coverImage }} style={styles.coverImage} />
+                    <Image source={{ uri: game.background_image }} style={styles.coverImage} />
                     <Text style={styles.title}>{game.name}</Text>
                     <Text style={styles.rating}>Avaliação: {game.rating}</Text>
                 </View>

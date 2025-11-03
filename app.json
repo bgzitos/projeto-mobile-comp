@@ -29,6 +29,9 @@
     "plugins": [
       "expo-router",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "rawgApiKey": "faf7b58e61544741af5d390f88869fa5"
+    }
   }
 }

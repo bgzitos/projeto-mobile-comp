@@ -1,18 +1,46 @@
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
+import { getGameDetails } from "/home/lucas/projeto-mobile/services/api";
 
 export default function InfoJogo () {
 
     const { id } = useLocalSearchParams();
     const router = useRouter();
 
-    const mockDetalhes = {
-        title: 'Nome do jogo',
-        coverImage: 'https://via.placeholder.com/400x200.png?text=Capa+do+Jogo',
-        description: 'Descrição detalhada do jogo',
-        platforms: ['PC', 'Playstation 5', 'Xbox Series X'],
-    };
+    const [gameDetails, setGameDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchGameDetails = async () => {
+            setLoading(true);
+            setError(null);
+            try{
+                const resposta = await getGameDetails(id);
+                console.log("Detalhes do jogo recebidos", resposta.data);
+                setGameDetails(resposta.data); 
+            } catch (err) {
+                console.error("Erro ao buscar detalhes do jogo:", err);
+                setError("Falha ao carregar jogo.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchGameDetails();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <View style={[estilo.container, estilo.centered]}>
+                <Text style={estilo.errorText}>Jogo não encontrado.</Text>
+            </View>
+        );
+    }
 
     return (
 
@@ -27,24 +55,23 @@ export default function InfoJogo () {
                 </TouchableOpacity>
 
             <ScrollView
-            contentContainerStyle={estilo.contentContainer}>
+                contentContainerStyle={estilo.contentContainer}>
 
-                <Image source={{ uri: mockDetalhes.coverImage }} style={estilo.coverImage} />
+                <Image source={{ uri: gameDetails.background_image }} style={estilo.coverImage} />
 
-                <Text style={estilo.title}>{mockDetalhes.title}</Text>
-                <Text style={estilo.idText}>(ID do Jogo: {id})</Text>
+                <Text style={estilo.title}>{gameDetails.name}</Text>
 
                 <Text style={estilo.sectionTitle}>Plataformas</Text>
                 <View style={estilo.platformContainer}>
-                    {mockDetalhes.platforms.map(platform => (
-                    <View key={platform} style={estilo.platformTag}>
-                    <Text style={estilo.platformText}>{platform}</Text>
+                    {gameDetails.platforms.map(platform => (
+                    <View key={platform.platform.id} style={estilo.platformTag}>
+                        <Text style={estilo.platformText}>{platform.platform.name}</Text>
                     </View>
                     ))}
-                    </View>
+                </View>
 
-                    <Text style={estilo.sectionTitle}>Descrição</Text>
-                    <Text style={estilo.description}>{mockDetalhes.description}</Text>
+                <Text style={estilo.sectionTitle}>Descrição</Text>
+                <Text style={estilo.description}>{gameDetails.description_raw}</Text>
 
             </ScrollView>
         </View>
@@ -55,6 +82,23 @@ const estilo = StyleSheet.create ({
     container: {
         flex: 1,
         backgroundColor: '#121212',
+    },
+    centered: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 18,
+        textAlign: 'center',
+    },
+    backButtonError: {
+        marginTop: 20,
+        backgroundColor: '#333',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 8,
     },
     contentContainer: {
         paddingHorizontal: 16,
