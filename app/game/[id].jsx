@@ -2,7 +2,11 @@ import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIn
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { getGameDetails } from "/home/lucas/projeto-mobile/services/api";
+import { getGameDetails } from "../../services/api";
+import SectionHeader from "../../components/SectionHeader";
+import LoadingIndicator from "../../components/LoadingState";
+import ErrorDisplay from "../../components/ErrorState";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function InfoJogo () {
 
@@ -12,6 +16,9 @@ export default function InfoJogo () {
     const [gameDetails, setGameDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { colors } = useTheme();
+    const styles = estilo(colors);
 
     useEffect(() => {
         if (!id) return;
@@ -35,53 +42,53 @@ export default function InfoJogo () {
     }, [id]);
 
     if (loading) {
-        return (
-            <View style={[estilo.container, estilo.centered]}>
-                <Text style={estilo.errorText}>Jogo não encontrado.</Text>
-            </View>
-        );
+        return <LoadingIndicator />;
+    }
+
+    if (error) {
+        return <ErrorDisplay message={error} />
     }
 
     return (
 
-        <View style={estilo.container}>
+        <View style={styles.container}>
 
             <TouchableOpacity
-                style={estilo.backButton}
+                style={styles.backButton}
                 onPress={() => router.back()} >
 
-                    <Ionicons name="chevron-back" size={24} color="white" />
-                    <Text style={estilo.backButtonText}>Voltar</Text>
+                    <Ionicons name="chevron-back" size={24} color={colors.text} />
+                    <Text style={styles.backButtonText}>Voltar</Text>
                 </TouchableOpacity>
 
             <ScrollView
-                contentContainerStyle={estilo.contentContainer}>
+                contentContainerStyle={styles.contentContainer}>
 
-                <Image source={{ uri: gameDetails.background_image }} style={estilo.coverImage} />
+                <Image source={{ uri: gameDetails.background_image }} style={styles.coverImage} />
 
-                <Text style={estilo.title}>{gameDetails.name}</Text>
+                <Text style={styles.title}>{gameDetails.name}</Text>
 
-                <Text style={estilo.sectionTitle}>Plataformas</Text>
-                <View style={estilo.platformContainer}>
+                <SectionHeader title="Plataformas" />
+                <View style={styles.platformContainer}>
                     {gameDetails.platforms.map(platform => (
-                    <View key={platform.platform.id} style={estilo.platformTag}>
-                        <Text style={estilo.platformText}>{platform.platform.name}</Text>
+                    <View key={platform.platform.id} style={styles.platformTag}>
+                        <Text style={styles.platformText}>{platform.platform.name}</Text>
                     </View>
                     ))}
                 </View>
 
-                <Text style={estilo.sectionTitle}>Descrição</Text>
-                <Text style={estilo.description}>{gameDetails.description_raw}</Text>
+                <SectionHeader title="Descrição" />
+                <Text style={styles.description}>{gameDetails.description_raw}</Text>
 
             </ScrollView>
         </View>
     );
 }
 
-const estilo = StyleSheet.create ({
+const estilo = (colors) => StyleSheet.create ({
     container: {
         flex: 1,
-        backgroundColor: '#121212',
+        backgroundColor: colors.background,
     },
     centered: {
         justifyContent: 'center',
@@ -95,7 +102,7 @@ const estilo = StyleSheet.create ({
     },
     backButtonError: {
         marginTop: 20,
-        backgroundColor: '#333',
+        backgroundColor: colors.button,
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 8,
@@ -110,10 +117,10 @@ const estilo = StyleSheet.create ({
         paddingHorizontal: 16,
         paddingTop: 50,
         paddingBottom: 10,
-        backgroundColor: '#121212',
+        backgroundColor: colors.background,
     },
     backButtonText: {
-        color: 'white',
+        color: colors.text,
         fontSize: 18,
         marginLeft: 6,
     },
@@ -128,26 +135,19 @@ const estilo = StyleSheet.create ({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#fff',
+        color: colors.text,
     },
     idText: {
         fontSize: 18,
-        color: '#ccc',
+        color: colors.text,
         marginBottom: 20,
     },
-    sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginTop: 15,
-    marginBottom: 10,
-  },
   platformContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   platformTag: {
-    backgroundColor: '#333',
+    backgroundColor: colors.card,
     borderRadius: 15,
     paddingVertical: 5,
     paddingHorizontal: 12,
@@ -155,11 +155,11 @@ const estilo = StyleSheet.create ({
     marginBottom: 8,
   },
   platformText: {
-    color: '#fff',
+    color: colors.text,
   },
   description: {
     fontSize: 16,
-    color: '#ccc',
+    color: colors.text,
     lineHeight: 24,
   },
 });

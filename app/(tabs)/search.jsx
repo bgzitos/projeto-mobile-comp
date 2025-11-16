@@ -1,9 +1,13 @@
-import { FontAwesome } from '@expo/vector-icons';
-import { View, TextInput, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { searchGames } from '../../services/api';
 import GameCard from '../../components/GameCard';
+import SearchBar from '../../components/SearchBar';
+import LoadingIndicator from '../../components/LoadingState';
+import ErrorDisplay from '../../components/ErrorState';
+import { useTheme } from '../../context/ThemeContext';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SearchScreen() {
 
@@ -13,6 +17,9 @@ export default function SearchScreen() {
     const [error, setError] = useState(null);
 
     const [hasSearched, setHasSearched] = useState(false);
+
+    const { colors, theme, toggleTheme } = useTheme();
+    const styles = createStyles(colors);
 
     const handleSearch = async () => {
         if (!searchQuery) return;
@@ -37,10 +44,10 @@ export default function SearchScreen() {
 
     const renderEmptyComponent = () => {
         if (loading) {
-            return <ActivityIndicator size="large" color="#fff" style={{ marginTop: 50 }} />;
+            return <LoadingIndicator />;
         }
         if (error) {
-            return <Text style={styles.messageText}>{error}</Text>;
+            return <ErrorDisplay message={error} />;
         }
         if (hasSearched && results.length === 0) {
             return <Text style={styles.messageText}>Nenhum jogo foi encontrado com o nome de "{searchQuery}"</Text>;
@@ -53,20 +60,24 @@ export default function SearchScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.searchContainer}>
-                <FontAwesome name="search" size={20} color="#888" style={styles.searchIcon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Procure por um jogo..."
-                    placeholderTextColor="#888"
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    onSubmitEditing={handleSearch}
-                />
-                <TouchableOpacity onPress={handleSearch} style={styles.searchButton}>
-                    <Text style={styles.searchButtonText}>Buscar</Text>
+
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Buscar</Text>
+                <TouchableOpacity onPress={toggleTheme} style={styles.themeButton}>
+                    <Ionicons 
+                        name={theme === 'light' ? 'moon' : 'sunny'} 
+                        size={24} 
+                        color={colors.text} 
+                    />
                 </TouchableOpacity>
             </View>
+
+            <SearchBar
+                query={searchQuery}
+                onQueryChange={setSearchQuery}
+                onSearch={handleSearch}
+            />
+
             <FlatList
                 data={results}
                 renderItem={({ item }) => <GameCard game={item} />}
@@ -78,37 +89,25 @@ export default function SearchScreen() {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#121212',
+        backgroundColor: colors.background,
     },
-    searchContainer: {
+    header: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#202020',
-        borderRadius: 10,
-        margin: 16,
-        paddingHorizontal: 10,
+        paddingHorizontal: 16,
+        paddingTop: 10,
     },
-    searchIcon: {
-        marginRight: 10,
-    },
-    input: {
-        flex: 1,
-        paddingVertical: 12,
-        fontSize: 16,
-        color: '#fff',
-    },
-    searchButton: {
-        backgroundColor: '#505050',
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-    },
-    searchButtonText: {
-        color: '#fff',
+    headerTitle: {
+        fontSize: 24,
         fontWeight: 'bold',
+        color: colors.text,
+    },
+    themeButton: {
+        padding: 8,
     },
     messageText: {
         color: '#888',
