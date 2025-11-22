@@ -66,7 +66,7 @@ export default function TelaInicial (){
     if (!loadingMore) return null;
     return (
       <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   };

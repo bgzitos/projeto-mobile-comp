@@ -18,7 +18,7 @@ export default function InfoJogo () {
     const [error, setError] = useState(null);
 
     const { colors } = useTheme();
-    const styles = estilo(colors);
+    const styles = createStyles(colors);
 
     useEffect(() => {
         if (!id) return;
@@ -49,33 +49,36 @@ export default function InfoJogo () {
         return <ErrorDisplay message={error} />
     }
 
-    return (
+    if (!gameDetails) return null;
 
+    return (
         <View style={styles.container}>
 
             <TouchableOpacity
                 style={styles.backButton}
                 onPress={() => router.back()} >
-
                     <Ionicons name="chevron-back" size={24} color={colors.text} />
                     <Text style={styles.backButtonText}>Voltar</Text>
-                </TouchableOpacity>
+            </TouchableOpacity>
 
-            <ScrollView
-                contentContainerStyle={styles.contentContainer}>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
 
                 <Image source={{ uri: gameDetails.background_image }} style={styles.coverImage} />
 
                 <Text style={styles.title}>{gameDetails.name}</Text>
 
-                <SectionHeader title="Plataformas" />
-                <View style={styles.platformContainer}>
-                    {gameDetails.platforms.map(platform => (
-                    <View key={platform.platform.id} style={styles.platformTag}>
-                        <Text style={styles.platformText}>{platform.platform.name}</Text>
-                    </View>
-                    ))}
-                </View>
+                {gameDetails.platforms && gameDetails.platforms.length > 0 && (
+                    <>
+                        <SectionHeader title="Plataformas" />
+                        <View style={styles.platformContainer}>
+                            {gameDetails.platforms.map(p => (
+                                <View key={p.platform.id} style={styles.platformTag}>
+                                    <Text style={styles.platformText}>{p.platform.name}</Text>
+                                </View>
+                            ))}
+                            </View>
+                        </>
+                    )}
 
                 <SectionHeader title="Descrição" />
                 <Text style={styles.description}>{gameDetails.description_raw}</Text>
@@ -85,31 +88,13 @@ export default function InfoJogo () {
     );
 }
 
-const estilo = (colors) => StyleSheet.create ({
+const createStyles = (colors) => StyleSheet.create ({
     container: {
         flex: 1,
         backgroundColor: colors.background,
     },
-    centered: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-    },
-    errorText: {
-        color: 'red',
-        fontSize: 18,
-        textAlign: 'center',
-    },
-    backButtonError: {
-        marginTop: 20,
-        backgroundColor: colors.button,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-    },
     contentContainer: {
         paddingHorizontal: 16,
-        paddingBottom: 16,
     },
     backButton: {
         flexDirection: 'row',
@@ -118,6 +103,7 @@ const estilo = (colors) => StyleSheet.create ({
         paddingTop: 50,
         paddingBottom: 10,
         backgroundColor: colors.background,
+        zIndex: 10,
     },
     backButtonText: {
         color: colors.text,
@@ -126,40 +112,38 @@ const estilo = (colors) => StyleSheet.create ({
     },
     coverImage: {
         width: '100%',
-        height: 200,
-        marginBottom: 16,
-    },
-    content: {
-        padding: 16,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.text,
-    },
-    idText: {
-        fontSize: 18,
-        color: colors.text,
+        height: 250,
+        borderRadius: 12,
         marginBottom: 20,
     },
-  platformContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  platformTag: {
-    backgroundColor: colors.card,
-    borderRadius: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  platformText: {
-    color: colors.text,
-  },
-  description: {
-    fontSize: 16,
-    color: colors.text,
-    lineHeight: 24,
-  },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: colors.text,
+        marginBottom: 10,
+    },
+    platformContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 10,
+    },
+    platformTag: {
+        backgroundColor: colors.card,
+        borderRadius: 8,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        marginRight: 8,
+        marginBottom: 8,
+    },
+    platformText: {
+        color: colors.text,
+        fontWeight: '500',
+        fontSize: 14,
+    },
+    description: {
+        fontSize: 16,
+        color: colors.text,
+        lineHeight: 24,
+        opacity: 0.9,
+    },
 });
