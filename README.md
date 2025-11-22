@@ -1,89 +1,64 @@
 # ExploradorDeJogos
 
-*Aplicativo mobile para pesquisar, explorar e consultar informações à respeito de diversos jogos no universo de videogames, desenvolvido em React Native e Expo.*
+*Aplicativo mobile para pesquisar, explorar e consultar informações à respeito de diversos jogos no universo de videogames, feito em React Native.*
 
 ---
 
 ## Sobre o Projeto
 
-O **ExploradorDeJogos** é um catálogo de jogos intuitivo e moderno. Seu objetivo principal é permitir que usuários naveguem por uma vasta biblioteca e acessem detalhes de seus jogos favoritos. O projeto foca em uma experiência de usuário fluida, com design responsivo e funcionalidades interativas.
+O **ExploradorDeJogos** tem como principal objetivo ser uma espécie de catálogo de jogos intuitivo e amigável, permitindo que os usuários naveguem por uma biblioteca vasta de jogos, suas respectivas plataformas, informações gerais e muito mais.
 
 ---
 
 ## Funções Principais
 
-### Funcionais
-* **Listagem de Jogos Populares:** Tela inicial com scroll infinito (paginação) exibindo os jogos em alta.
-* **Busca Interativo:** Pesquise jogos pelos seus nomes em tempo real.
-* **Detalhes Completos:** Veja informações detalhadas sobre os jogos, como sua sinopse, plataformas imagem da capa e avaliação.
-* **Carregamento dinâmico:** Feedbacks visuais de `loading`, e tratamento de erros em todas requisições à API.
-
-### Diferenciais (UX/UI)
-* **Dark/Light Mode:** Suporte completo a temas claro e escuro, com persistência da escolha do usuário.
-* **Animações:** Transições de tela suaves com animações de "fade-in" e microinterações de toque.
-* **Design Responsivo** Layout adaptável que funciona bem em diferentes telas.
+* **Listagem de Jogos Populares:** Tela inicial com os jogos que estão em alta no momento.
+* **Busca e Filtros:** Pesquise jogos pelos seus nomes e filtre seus resultados por plataforma (PC, Playstation, Xbox, etc.).
+* **Tela de Detalhes:** Veja informações detalhadas sobre os jogos, como sua sinopse, prints, data de lançamento e avaliação.
+* **Carregamento dinâmico:** Feedbacks visuais de `loading`, `error` e `success` em todas requisições à API.
+* **Design Responsivo** Interface adaptável para diferentes tamanhos de tela.
 
 ---
 
-## Tecnologias Usadas
+## Tecnologias usadas
 
-* **Core:** React Native, Expo
+* **Frontend:** React Native
+* **Framework:** Expo
 * **Navegação:** Expo Router
-* **Gerenciamento de Estados:** React Hooks (useState, useEffect, useContext) e Context API
-* **Persistência de Dados:** AsyncStorage (para salvar o tema)
-* **Requisições HTTP:** Axios
-* **API Externa:** RAWG Video Games Database API
+* **Requisições HTTP** Axios
+* **Versões e updates:** Git e Github
 
 ---
 
 ## Como usar
 
-Siga os passos abaixo para rodar o aplicativo em ambiente local.
-
 ## Pré-requisitos
 
 * Node.js (versão LTS recomendada)
-* Dispositivo físico (Android ou IOS) com o app **Expo Go** instalado.
-* Uma chave da API gratuita da [RAWG](https://rawg.io/apidocs).
+* npm ou Yarn
+* Dispositivo físico (Android ou IOS) com o app Expo Go
 
 ### Instalação
 
 1. **Clone o repositório:**
     ```bash
-    git clone [https://github.com/bgzitos/projeto-mobile-comp.git](https://github.com/bgzitos/projeto-mobile-comp.git)
-    cd projeto-mobile-comp
+    git clone [https://github.com/bgzitos/projeto-mobile-comp](https://github.com/bgzitos/projeto-mobile-comp)
     ```
 
 2. **Instale as dependências:**
-   *Nota: Em caso de erros utilize a flag `--legacy-peer-deps` para evitar conflitos de versões.*
     ```bash
-    npm install --legacy-peer-deps
-    ```
-
-3. **Configure a API Key:**
-    Para que o app busque os dados, você precisa adicionar sua chave.
-    * Abra o arquivo `app.json` na raiz do projeto.
-    * Localize a seção `"extra"` (ou crie se não existir) dentro de `"expo"` e adicione sua chave:
-
-    ```json
-    "expo": {
-      ...
-      "extra": {
-        "rawgApiKey": "SUA_CHAVE_DA_RAWG_AQUI"
-      }
-    }
+    npm install
     ```
 
 ### Execução
 
 1. **Inicie o servidor de desenvolvimento:**
-    *Recomendo limpar o cache na primeira execução.*
     ```bash
-    npx expo start -c
+    npx expo start
     ```
 
 2. **Abra no celular:**
-    * Escaneie o **QRCode** exibido no terminal com o app do **Expo Go**.
+    * Escaneie o QRCode exibido no terminal com o app do Expo Go.
 
 ---
 
@@ -97,7 +72,3 @@ Ela fornece todos os dados necessários para a listagem, busca e detalhamento do
 ## Vídeo de Demonstração
 
 * **[Assista ao vídeo de demonstração do ExploradorDeJogos aqui]**(adicionar link do vídeo)
-
----
-
-*Desenvolvido por Lucas Borges para o Processo Seletivo Mobile 2025/2.*
