@@ -96,7 +96,7 @@ Ela fornece todos os dados necessários para a listagem, busca e detalhamento do
 
 ## Vídeo de Demonstração
 
-* **[Assista ao vídeo de demonstração do ExploradorDeJogos aqui]**(adicionar link do vídeo)
+* **[Assista ao vídeo de demonstração do ExploradorDeJogos aqui]**(https://drive.google.com/drive/folders/1LJ0aBQKJ5obB0wW5dK6PLBYWnGtdBEI9?usp=sharing)
 
 ---
 
